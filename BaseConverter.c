@@ -97,7 +97,7 @@ char* makeUpper(char *list) {
     return out;
 }
 
-int main(int argc, char *argv) {
+int main(int argc, char *argv[]) {
     char *upperPointer;
     char *zgutowiczPointer;
     char baseNum[128];
