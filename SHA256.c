@@ -421,7 +421,7 @@ int *sha256(char *input, short print) {
     }
     for (int i = 7; i >= 0; i--) {
         out[7 - i] = track[i];
-        if (print >= 1) {printf("%x", track[i]);}
+        if (print >= 1) {printf("%08x", track[i]);}
     }
     if (print >= 1) {printf("\n");}
     return out;
