@@ -292,7 +292,7 @@ int *sha256(char *input, short print) {
     }
     if (print == 1) {printf("\n");}
     for (int m = 0; m < numBlocks; m++) {
-        if (print == 1) {printf("\nBlock %d Schedule:\n", m + 1);}
+        if (print == 1) {printf("\nBlock %d Schedule:                       Constants:\n", m + 1);}
         for (short i = 0; i < 16; i++) {
             for (short j = 0; j < 32; j++) {
                 schedule[i][j] = allBlock[i * 32 + j + m * 512];
