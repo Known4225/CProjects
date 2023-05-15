@@ -16,7 +16,7 @@ list -> length
 list functions:
 
 create list:
-list_t list = list_init();
+list_t *list = list_init();
 
 access items of a list (as a void pointer):
 void *item0 = list_item(list, 0);
