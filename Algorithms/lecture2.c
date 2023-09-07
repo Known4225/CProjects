@@ -44,6 +44,7 @@ Worst case: O(n ^ 2)
 #include "include/random.h"
 #include <time.h>
 
+/* exhibit A: Heapsort */
 
 void *intHeapsort(list_t *list) { // heapsort, my favourite sort
 
@@ -98,6 +99,8 @@ void *intHeapsort(list_t *list) { // heapsort, my favourite sort
     list_print(list);
 }
 
+/* exhibit B: Quicksort */
+
 void intQuicksortEmb(list_t *list, int start, int length) {
     if (length - start < 2) {
         return;
@@ -127,6 +130,88 @@ void intQuicksort(list_t *list) {
     list_print(list);
 }
 
+/* exhibit C: Mergesort */
+
+int *merge(int *list1, int *list2, int list1Length, int list2Length) {
+    /* Merge */
+    printf("merging: \n");
+    printf("[");
+    for (int i = 0; i < list1Length; i++) {
+        printf("%d, ", list1[i]);
+    }
+    printf("]\n");
+    printf("[");
+    for (int i = 0; i < list2Length; i++) {
+        printf("%d, ", list2[i]);
+    }
+    printf("]\n");
+    int *listEnd = malloc(sizeof(int) * (list1Length + list2Length));
+    int i = 0;
+    int list1p = 0;
+    int list2p = 0;
+    while (i < list1Length + list2Length) {
+        if (list1p >= list1Length) {
+            listEnd[i] = list2[list2p];
+            list2p++;
+        } else if (list2p >= list2Length) {
+            listEnd[i] = list1[list1p];
+            list1p++;
+        } else {
+            //printf("tsting\n");
+            if (list1[list1p] > list2[list2p]) {
+                listEnd[i] = list2[list2p];
+                list2p++;
+                //printf("2\n");
+            } else {
+                listEnd[i] = list1[list1p];
+                list1p++;
+                //printf("1\n");
+            }
+        }
+        i++;
+    }
+    printf("produced: \n");
+    printf("[");
+    for (int i = 0; i < list1Length + list2Length; i++) {
+        printf("%d, ", listEnd[i]);
+    }
+    printf("]\n");
+    return listEnd;
+}
+
+int *intMergesortEmb(int *list, int length) {
+    if (length == 1) {
+        return list;
+    }
+    printf("sorting: \n");
+    printf("[");
+    for (int i = 0; i < length; i++) {
+        printf("%d, ", list[i]);
+    }
+    printf("]\n");
+    int halfLen = length / 2;
+    int *list1;
+    int *list2;
+    list1 = intMergesortEmb(list, halfLen);
+    list2 = intMergesortEmb(list + halfLen, length - halfLen);
+    list = merge(list1, list2, halfLen, length - halfLen);
+    return list;
+}
+
+void intMergesort(list_t *list) {
+    
+    int *newList = malloc(sizeof(int) * list -> length);
+    for (int i = 0; i < list -> length; i++) {
+        newList[i] = list -> data[i].i;
+    }
+    newList = intMergesortEmb(newList, list -> length);
+    for (int i = 0; i < list -> length; i++) {
+        list -> data[i].i = newList[i];
+    }
+    printf("MSorted : ");
+    list_print(list);
+}
+
 int main(int argc, char *argv[]) {
     list_t *toSort = list_init();
     srand(time(NULL)); // initialise random seed
@@ -135,6 +220,7 @@ int main(int argc, char *argv[]) {
     }
     printf("Unsorted: ");
     list_print(toSort);
-    intHeapsort(toSort);
-    intQuicksort(toSort);
+    // intHeapsort(toSort);
+    //intQuicksort(toSort);
+    intMergesort(toSort);
 }
