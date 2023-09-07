@@ -94,44 +94,36 @@ void *intHeapsort(list_t *list) { // heapsort, my favourite sort
             }
         }
     }
-    printf("Sorted  : ");
+    printf("HSorted : ");
     list_print(list);
 }
 
-int *intQuicksortEmb(int *list, int length) {
-    if (length == 1) {
-        return list;
+void intQuicksortEmb(list_t *list, int start, int length) {
+    if (length - start < 2) {
+        return;
     }
-    int pivotIndex = 0; // picks the first element as pivot
-    int pivotSplitter = 1;
-    int temp;
-    for (int i = 1; i < length; i++) {
-        if (list[i] < list[pivotIndex]) {
-            printf("%d is less than %d\n", list[i], list[pivotIndex]);
-            temp = list[i]; // swap
-            list[i] = list[pivotSplitter];
-            list[pivotSplitter] = temp;
+    int pivotIndex = start; // picks the first element as pivot
+    int pivotSplitter = start + 1;
+    unitype temp;
+    for (int i = start + 1; i < length; i++) {
+        if (list -> data[i].i < list -> data[pivotIndex].i) {
+            temp = list -> data[i]; // swap
+            list -> data[i] = list -> data[pivotSplitter];
+            list -> data[pivotSplitter] = temp;
             pivotSplitter++;
         }
-        //printf("splitter: %d\n", pivotSplitter);
     }
     pivotSplitter--;
-    temp = list[pivotIndex]; // swap pivot to correct position
-    list[pivotIndex] = list[pivotSplitter];
-    list[pivotSplitter] = temp;
-    list = intQuicksortEmb(list, pivotSplitter - 1);
-    return list;
+    temp = list -> data[pivotIndex]; // swap pivot to correct position
+    list -> data[pivotIndex] = list -> data[pivotSplitter];
+    list -> data[pivotSplitter] = temp;
+    intQuicksortEmb(list, pivotSplitter + 1, length);
+    intQuicksortEmb(list, 0, pivotSplitter);
 }
 
 void intQuicksort(list_t *list) {
-    int *newList = malloc(sizeof(int) * list -> length);
-    for (int i = 0; i < list -> length; i++) {
-        newList[i] = list -> data[i].i;
-    }
-    newList = intQuicksortEmb(newList, list -> length);
-    for (int i = 0; i < list -> length; i++) {
-        list -> data[i].i = newList[i];
-    }
+    intQuicksortEmb(list, 0, list -> length);
+    printf("QSorted : ");
     list_print(list);
 }
 
@@ -143,6 +135,6 @@ int main(int argc, char *argv[]) {
     }
     printf("Unsorted: ");
     list_print(toSort);
-    //intHeapsort(toSort);
+    intHeapsort(toSort);
     intQuicksort(toSort);
 }
