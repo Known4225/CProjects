@@ -65,26 +65,12 @@ put it in order from smallest to largest
 This class starts lists at index 1? What is this, Lua?
 We also write solutions in 'Pseudocode', RAM model
 */
+
+/* this file contains three common O(n²) sorting algorithms */
+
 #include "include/list.h"
+#include "include/random.h"
 #include <time.h>
-
-extern inline int randomInt(int lowerBound, int upperBound) { // random integer between lower and upper bound (inclusive)
-    return (rand() % (upperBound - lowerBound + 1) + lowerBound);
-}
-
-extern inline double randomDouble(double lowerBound, double upperBound) { // random double between lower and upper bound
-    return (rand() * (upperBound - lowerBound) / RAND_MAX + lowerBound); // probably works idk
-}
-
-typedef struct {
-    list_t *intList;
-} int_list;
-
-void swap(list_t *list, int index1, int index2) { // swaps two indices of a list
-    unitype temp = list -> data[index1];
-    list -> data[index1] = list -> data[index2];
-    list -> data[index2] = temp;
-}
 
 list_t *randomList(int length) { // generates a list of n random integers (bounded by 5n)
     list_t *out = list_init();
@@ -106,31 +92,73 @@ list_t *randomUniqueList(int length) { // generates a list of n random integers,
     return out;
 }
 
-void insertionSort(int_list *selfp) { // runtime: O(n^2), in place sort
-    int_list self = *selfp;
-    printf("list init  : ");
-    list_print(self.intList);
-    for (int i = 1; i < self.intList -> length; i++) { // go through each number
-        int j = i;
-        while (self.intList -> data[j].i < self.intList -> data[j - 1].i && j > 0) { // continue moving the newest one back until it's no longer smaller than the one that precedes it or until it hits the front
-            swap(self.intList, j - 1, j);
-            j--;
+void selectionSort(list_t *list) { // runtime: O(n^2), in place sort, I like this one
+    for (int i = 0; i < list -> length - 1; i++) {
+        int minInd = i;
+        int min = list -> data[i].i;
+        for (int j = i; j < list -> length; j++) {
+            if (list -> data[j].i < min) {
+                min = list -> data[j].i;
+                minInd = j;
+            }
         }
-        if (i != self.intList -> length - 1) { // don't print the last one cuz it'll get printed twice if you do
-            printf("insertion%2d: ", i);
-            list_print(self.intList);
+        list -> data[minInd] = list -> data[i];
+        list -> data[i].i = min;
+    }
+}
+
+void bubbleSort(list_t *list) {
+    for (int i = 0; i < list -> length - 1; i++) {
+        for (int j = i; j > -1; j--) {
+            if (list -> data[j].i > list -> data[j + 1].i) {
+                unitype temp = list -> data[j + 1];
+                list -> data[j + 1] = list -> data[j];
+                list -> data[j] = temp;
+            }
         }
     }
-    printf("list sorted: ");
-    list_print(self.intList);
-    *selfp = self;
+}
+
+void insertionSort(list_t *list) { // runtime: O(n^2), in place sort, generally considered as one of the best n² sorts
+    for (int i = 1; i < list -> length; i++) { // go through each number
+        int j = i;
+        while (list -> data[j].i < list -> data[j - 1].i && j > 0) { // continue moving the newest one back until it's no longer smaller than the one that precedes it or until it hits the front
+            unitype temp = list -> data[j - 1];
+            list -> data[j - 1] = list -> data[j];
+            list -> data[j] = temp;
+            j--;
+        }
+        if (i != list -> length - 1) { // don't print the last one cuz it'll get printed twice if you do
+            //printf("insertion%2d: ", i);
+            //list_print(list);
+        }
+    }
 }
 
 int main(int argc, char *argv[]) {
     srand(time(NULL)); // randomiser init seed
 
     /* insertion sort */
-    int_list insertion;
-    insertion.intList = randomList(10);
-    insertionSort(&insertion);
+    list_t *toSort = randomList(10);
+    printf("\nUnsorted: ");
+    list_print(toSort);
+    selectionSort(toSort);
+    printf("Selected: ");
+    list_print(toSort);
+    free(toSort);
+    toSort = randomList(10);
+    printf("\nUnsorted: ");
+    list_print(toSort);
+    bubbleSort(toSort);
+    printf("Bubbled : ");
+    list_print(toSort);
+    free(toSort);
+    toSort = randomList(10);
+    printf("\nUnsorted: ");
+    list_print(toSort);
+    insertionSort(toSort);
+    printf("Inserted: ");
+    list_print(toSort);
+    printf("\n");
+    free(toSort);
 }

@@ -39,6 +39,8 @@ Insertion best case: O(n)
 Worst case: O(n ^ 2)
 */
 
+/* this file contains three common O(n log n) sorting algorithms */
+/* this file and the 1stlect file make up the classic SBIHQM sorting algorithms, also known as QISHMB */
 
 #include "include/list.h"
 #include "include/random.h"
@@ -58,8 +60,8 @@ void *intHeapsort(list_t *list) { // heapsort, my favourite sort
             sub = (sub - 1) / 2;
         }
     }
-    printf("Max Heap: ");
-    list_print(list);
+    //printf("Max Heap: "); // uncomment to see max heap
+    //list_print(list);
 
     /* step 2: heapify */
     for (int i = 0; i < list -> length; i++) {
@@ -198,10 +200,23 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < 10; i++) {
         list_append(toSort, (unitype) randomInt(0, 99), 'i');
     }
-    printf("Unsorted: ");
+    printf("\nUnsorted: ");
     list_print(toSort);
-    //intHeapsort(toSort);
-    //intQuicksort(toSort);
+    intHeapsort(toSort);
+    list_clear(toSort);
+    for (int i = 0; i < 10; i++) {
+        list_append(toSort, (unitype) randomInt(0, 99), 'i');
+    }
+    printf("\nUnsorted: ");
+    list_print(toSort);
+    intQuicksort(toSort);
+    list_clear(toSort);
+    for (int i = 0; i < 10; i++) {
+        list_append(toSort, (unitype) randomInt(0, 99), 'i');
+    }
+    printf("\nUnsorted: ");
+    list_print(toSort);
     intMergesort(toSort);
+    printf("\n");
     list_free(toSort);
 }
