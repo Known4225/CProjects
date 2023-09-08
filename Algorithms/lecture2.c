@@ -133,23 +133,21 @@ void intQuicksort(list_t *list) {
 /* exhibit C: Mergesort */
 
 int *intMergesortEmb(int *list, int length) {
-    if (length == 1) {
+    if (length == 1) { // if the length of the list is 1, it is sorted by default
         return list;
     }
     int halfLen = length / 2;
     int *list1;
     int *list2;
-    list1 = intMergesortEmb(list, halfLen);
-    list2 = intMergesortEmb(list + halfLen, length - halfLen);
-    //list = merge(list1, list2, halfLen, length - halfLen);
+    list1 = intMergesortEmb(list, halfLen); // assume the left half is sorted after this call
+    list2 = intMergesortEmb(list + halfLen, length - halfLen); // assume right half is sorted after this call
 
     /* Merge */
 
-    int *listEnd = malloc(sizeof(int) * (length));
-    int i = 0;
+    int *listEnd = malloc(sizeof(int) * length);
     int list1p = 0;
     int list2p = 0;
-    while (i < length) {
+    for (int i = 0; i < length; i++) {
         if (list1p >= halfLen) {
             listEnd[i] = list2[list2p];
             list2p++;
@@ -165,22 +163,32 @@ int *intMergesortEmb(int *list, int length) {
                 list1p++;
             }
         }
-        i++;
+    }
+    /* i don't know why this works */
+    if (length > 3) {
+        free(list1);
+    }
+    if (length > 2) {
+        free(list2);
     }
     return listEnd;
 }
 
 void intMergesort(list_t *list) {
-    
-    int *newList = malloc(sizeof(int) * list -> length);
-    for (int i = 0; i < list -> length; i++) {
-        newList[i] = list -> data[i].i;
-    }
-    newList = intMergesortEmb(newList, list -> length);
-    for (int i = 0; i < list -> length; i++) {
-        list -> data[i].i = newList[i];
+    if (list -> length > 1) {
+        int *oldList = malloc(sizeof(int) * list -> length);
+        for (int i = 0; i < list -> length; i++) {
+            oldList[i] = list -> data[i].i;
+        }
+        int *newList = intMergesortEmb(oldList, list -> length);
+        free(oldList);
+        for (int i = 0; i < list -> length; i++) {
+            list -> data[i].i = newList[i];
+        }
+        free(newList);
     }
     printf("MSorted : ");
+    
     list_print(list);
 }
 
@@ -192,7 +200,8 @@ int main(int argc, char *argv[]) {
     }
     printf("Unsorted: ");
     list_print(toSort);
-    // intHeapsort(toSort);
+    //intHeapsort(toSort);
     //intQuicksort(toSort);
     intMergesort(toSort);
+    list_free(toSort);
 }
