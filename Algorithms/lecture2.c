@@ -132,70 +132,42 @@ void intQuicksort(list_t *list) {
 
 /* exhibit C: Mergesort */
 
-int *merge(int *list1, int *list2, int list1Length, int list2Length) {
-    /* Merge */
-    printf("merging: \n");
-    printf("[");
-    for (int i = 0; i < list1Length; i++) {
-        printf("%d, ", list1[i]);
-    }
-    printf("]\n");
-    printf("[");
-    for (int i = 0; i < list2Length; i++) {
-        printf("%d, ", list2[i]);
-    }
-    printf("]\n");
-    int *listEnd = malloc(sizeof(int) * (list1Length + list2Length));
-    int i = 0;
-    int list1p = 0;
-    int list2p = 0;
-    while (i < list1Length + list2Length) {
-        if (list1p >= list1Length) {
-            listEnd[i] = list2[list2p];
-            list2p++;
-        } else if (list2p >= list2Length) {
-            listEnd[i] = list1[list1p];
-            list1p++;
-        } else {
-            //printf("tsting\n");
-            if (list1[list1p] > list2[list2p]) {
-                listEnd[i] = list2[list2p];
-                list2p++;
-                //printf("2\n");
-            } else {
-                listEnd[i] = list1[list1p];
-                list1p++;
-                //printf("1\n");
-            }
-        }
-        i++;
-    }
-    printf("produced: \n");
-    printf("[");
-    for (int i = 0; i < list1Length + list2Length; i++) {
-        printf("%d, ", listEnd[i]);
-    }
-    printf("]\n");
-    return listEnd;
-}
-
 int *intMergesortEmb(int *list, int length) {
     if (length == 1) {
         return list;
     }
-    printf("sorting: \n");
-    printf("[");
-    for (int i = 0; i < length; i++) {
-        printf("%d, ", list[i]);
-    }
-    printf("]\n");
     int halfLen = length / 2;
     int *list1;
     int *list2;
     list1 = intMergesortEmb(list, halfLen);
     list2 = intMergesortEmb(list + halfLen, length - halfLen);
-    list = merge(list1, list2, halfLen, length - halfLen);
-    return list;
+    //list = merge(list1, list2, halfLen, length - halfLen);
+
+    /* Merge */
+
+    int *listEnd = malloc(sizeof(int) * (length));
+    int i = 0;
+    int list1p = 0;
+    int list2p = 0;
+    while (i < length) {
+        if (list1p >= halfLen) {
+            listEnd[i] = list2[list2p];
+            list2p++;
+        } else if (list2p >= length - halfLen) {
+            listEnd[i] = list1[list1p];
+            list1p++;
+        } else {
+            if (list1[list1p] > list2[list2p]) {
+                listEnd[i] = list2[list2p];
+                list2p++;
+            } else {
+                listEnd[i] = list1[list1p];
+                list1p++;
+            }
+        }
+        i++;
+    }
+    return listEnd;
 }
 
 void intMergesort(list_t *list) {
