@@ -215,8 +215,8 @@ Matrix *matrixMulRec(Matrix *mat1, Matrix *mat2) { // assume both inputs are squ
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    Matrix *newMat1 = matrixInit(2, 2);
-    Matrix *newMat2 = matrixInit(2, 2);
+    Matrix *newMat1 = matrixInit(3, 3);
+    Matrix *newMat2 = matrixInit(3, 3);
     Matrix *newProd = matrixMulIter(newMat1, newMat2);
     //Matrix *newProdRec = matrixMulRec(newMat1, newMat2);
     printf("A = \n");
