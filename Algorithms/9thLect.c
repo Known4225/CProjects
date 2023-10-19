@@ -52,7 +52,7 @@ typedef struct {
 } childClass1;
 
 void parentConstruct(parentClass *selfp) { // constructs the parent
-    parentClass self = *selfp;
+    parentClass self = *selfp; // you could just use the arrow, but I like doing this for some reason. It's probably slower and uses more memory
     self.type = 0; // specifies that this is a parent
     self.x1 = 6;
     self.y1 = 9;
