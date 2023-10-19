@@ -126,8 +126,8 @@ int findHeight(BSTNode *head) { // O(?), finds the height of a tree
     return findHeightRec(head, 0);
 }
 
-pow2(int power) {
-    out = 1;
+int pow2(int power) {
+    int out = 1;
     for (int i = 0; i < power; i++) {
         out *= 2;
     }
@@ -136,21 +136,77 @@ pow2(int power) {
 
 int query(BSTNode *head, int heightOfQuery, int query) {
     // we can use the binary value of the query to traverse the tree, eg 011 = go left, go right, go right
-    
+    BSTNode *outNode = head;
+    unsigned int mask = 1;
+    mask <<= heightOfQuery - 2;
+    for (int i = 0; i < heightOfQuery - 1; i++) {
+        if (outNode == NULL) {
+            return -2958285;
+        }
+        if (query & mask) {
+            outNode = outNode -> right;
+        } else {
+            outNode = outNode -> left;
+        }
+        mask >>= 1;
+    }
+    if (outNode == NULL) {
+        return -2958285;
+    }  
+    return outNode -> value;
 }
 
 void printBST(BSTNode *head) {
     // printf("%3d\n", 1);
     int height = findHeight(head);
     printf("height: %d\n", height);
-    int margin = 1;
-    int bracket = 3;
+    int marginLeft = 0;
+    int marginRight = 1;
+    int bracketLeft = 1;
+    int bracketRight = 2;
     // do the pascal power of 2 algorithm
-    int geniusLen = pow2(height);
-    int *genius = malloc(sizeof(int) * geniusLen); // genius plan
-    for (int i = 0; i < geniusLen; i++) {
-        -2958285; // reserved value
-        genius[i] = query(head, height, i);
+    for (int k = 0; k < height; k++) {
+        int geniusLen = pow2(height - (k + 1));
+        int *genius = malloc(sizeof(int) * geniusLen); // genius plan
+        for (int i = 0; i < geniusLen; i++) {
+            // -2958285; // reserved value
+            genius[i] = query(head, height, i);
+        }
+        for (int i = 0; i < geniusLen; i++) {
+            for (int j = 0; j < marginLeft; j++) {
+                printf(" ");
+            }
+            if (genius[i] == -2958285) {
+                printf("   ");
+            } else {
+                printf("%3d", genius[i]);
+            }
+            for (int j = 0; j < marginRight; j++) {
+                printf(" ");
+            }
+        }
+        printf("\n");
+        for (int i = 0; i < geniusLen / 2; i++) {
+            for (int j = 0; j < bracketLeft; j++) {
+                printf(" ");
+            }
+            printf("\\");
+            for (int j = 0; j < bracketRight; j++) {
+                printf(" ");
+            }
+            for (int j = 0; j < bracketLeft; j++) {
+                printf(" ");
+            }
+            printf("/");
+            for (int j = 0; j < bracketRight; j++) {
+                printf(" ");
+            }
+        }
+        printf("\n");
+        marginLeft += pow2(k + 1);
+        marginRight += pow2(k + 1);
+        bracketLeft += pow2(k + 1);
+        bracketRight += pow2(k + 1);
     }
 }
 
