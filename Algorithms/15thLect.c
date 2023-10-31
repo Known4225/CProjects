@@ -161,6 +161,13 @@ are more prevalant in the data
 to make the tree you make a frequency table and then combine shit until you get a full tree
 then you assign each character in the tree a unique prefix by its position in the tree
 and then boom. Compressed
+
+guys i just had a genius idea
+so you do huffman with characters, and then also words
+so you layer another huffman on top using words
+
+so you just use single "append" bits after characters to do words
+actually that wont work
 */
 
 #include <stdio.h>
