@@ -1,4 +1,4 @@
-NEWEST = 14th
+NEWEST = 15th
 all:
 	gcc $(NEWEST)Lect.c -o $(NEWEST)Lect.o -lm
 val:

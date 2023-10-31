@@ -41,11 +41,11 @@ This seems ill-advised
         
 
         ----- 120 -----
-       /               \
-    - 124 -         - 900 -
-   /       \       /       \
+        /             \
+      124             900 
+    /     \         /     \
   154     124     594     203
- /   \   /   \   /   \   /   \
+  / \     / \     / \     / \
 142 124 165 123 142 124 165 123
 
 we need some kind of pascal's numbers
@@ -156,30 +156,47 @@ int query(BSTNode *head, int heightOfQuery, int query) {
     return outNode -> value;
 }
 
-void printBST(BSTNode *head) {
+void printCenteredInt(int pr) {
+    if (pr < 10) {
+        printf(" %d ", pr);
+    } else if (pr < 100) {
+        printf("%d ", pr);
+    } else if (pr > 999) {
+        printf("999");
+    } else {
+        printf("%d", pr);
+    }
+}
+
+void printBST(BSTNode *head, char renderAll) {
     // printf("%3d\n", 1);
     int height = findHeight(head);
     printf("height: %d\n", height);
     int marginLeft = 0;
     int marginRight = 1;
-    int bracketLeft = 1;
-    int bracketRight = 2;
+    int bracketLeft = 2;
+    int bracketMid = 1;
+    int bracketRight = 3;
     // do the pascal power of 2 algorithm
     for (int k = 0; k < height; k++) {
         int geniusLen = pow2(height - (k + 1));
         int *genius = malloc(sizeof(int) * geniusLen); // genius plan
         for (int i = 0; i < geniusLen; i++) {
             // -2958285; // reserved value
-            genius[i] = query(head, height, i);
+            genius[i] = query(head, height - k, i);
         }
         for (int i = 0; i < geniusLen; i++) {
             for (int j = 0; j < marginLeft; j++) {
                 printf(" ");
             }
             if (genius[i] == -2958285) {
-                printf("   ");
+                if (renderAll && 0) { // disabled feature because it looks bad
+                    printf("nil");
+                } else {
+                    printf("   ");
+                }
             } else {
-                printf("%3d", genius[i]);
+                printCenteredInt(genius[i]);
             }
             for (int j = 0; j < marginRight; j++) {
                 printf(" ");
@@ -190,14 +207,19 @@ void printBST(BSTNode *head) {
             for (int j = 0; j < bracketLeft; j++) {
                 printf(" ");
             }
+            if (genius[i * 2] != -2958285 || renderAll) {
             printf("\\");
-            for (int j = 0; j < bracketRight; j++) {
+            } else {
                 printf(" ");
             }
-            for (int j = 0; j < bracketLeft; j++) {
+            for (int j = 0; j < bracketMid; j++) {
                 printf(" ");
             }
+            if (genius[i * 2 + 1] != -2958285 || renderAll) {
             printf("/");
+            } else {
+                printf(" ");
+            }
             for (int j = 0; j < bracketRight; j++) {
                 printf(" ");
             }
@@ -206,6 +228,7 @@ void printBST(BSTNode *head) {
         marginLeft += pow2(k + 1);
         marginRight += pow2(k + 1);
         bracketLeft += pow2(k + 1);
+        bracketMid += pow2(k + 2);
         bracketRight += pow2(k + 1);
     }
 }
@@ -234,22 +257,29 @@ char treeSearch(BSTNode *head, int searchFor) { // O(h) (where h is the height o
 }
 
 int main(int argc, char *argv[]) {
-    int array[8] = {0, 5, 2, 3, 8, 12, 45, 1};
-    int length = 8;
+    int length = 14;
+    int array[14] = {60, 5, 2, 80, 56, 17, 632, 84, 91, 39, 12, 72, 34, 89};
+    
     BSTNode *head = createBST(array, length);
-    printf("done\n");
-    printBST(head);
+    char drawAll = 0;
+    if (argc > 1) {
+        if (argv[1][0] == '1') {
+            drawAll = 1;
+        }
+    }
+    printBST(head, drawAll);
     inOrderPrint(head);
     printf("\n");
-    if (treeSearch(head, 7)) {
-        printf("found %d\n", 7);
+    int find = 89;
+    if (treeSearch(head, find)) {
+        printf("found %d\n", find);
     } else {
-        printf("%d not found\n", 7);
+        printf("%d not found\n", find);
     }
-
-    if (treeSearch(head, 8)) {
-        printf("found %d\n", 8);
+    find = 10;
+    if (treeSearch(head, find)) {
+        printf("found %d\n", find);
     } else {
-        printf("%d not found\n", 8);
+        printf("%d not found\n", find);
     }
 }
