@@ -168,6 +168,12 @@ so you layer another huffman on top using words
 
 so you just use single "append" bits after characters to do words
 actually that wont work
+
+the thing is you also have to store the tree itself in the data
+or some kind of table for corresponding characters
+which takes up some overhead space
+
+so you gotta remember that
 */
 
 #include <stdio.h>
