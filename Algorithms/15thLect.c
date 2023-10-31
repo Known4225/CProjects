@@ -174,6 +174,11 @@ or some kind of table for corresponding characters
 which takes up some overhead space
 
 so you gotta remember that
+
+Runtime: depends on the min-priority queue
+but with the best one it's
+O(n lg n)
+cool
 */
 
 #include <stdio.h>
