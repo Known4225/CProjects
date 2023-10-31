@@ -136,6 +136,7 @@ int pow2(int power) {
 
 int query(BSTNode *head, int heightOfQuery, int query) {
     // we can use the binary value of the query to traverse the tree, eg 011 = go left, go right, go right
+    // memoization & dynamic programming algorithms would speed this up, but who has time for that
     BSTNode *outNode = head;
     unsigned int mask = 1;
     mask <<= heightOfQuery - 2;
