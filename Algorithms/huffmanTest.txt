@@ -27,7 +27,7 @@ The length of the code should never exceed 15 bits, although there is nothing ex
 Alternatively, just use 8 bits for the length of the code, this is unideal but technically it is the simplest solution for infinitely scalable huffman encoding.
 It seems like the zlib developers have also come across this problem, which is amusing. Obviously they have come up with a much more clever solution.
 
-Now, here's a bunch of characters to make the frequency table really big
+Now, here's a bunch of characters to make the frequency table really big:
 
 1234567890!'^+%&/()=[]{}@~|\<>$?_
 
