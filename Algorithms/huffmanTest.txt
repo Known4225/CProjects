@@ -7,3 +7,43 @@ So yeah it seems like that bigger file did help the huffing paint algorithm quit
 It's unfortunate that you have to store the frequency table, because that thing takes up a lot of space.
 It makes huffman encoding not super feasible small files, but this idea of storing a table is fairly common in file formats.
 Many image file formats have a color table, which allows them to use less colors and save a lot of space.
+
+There is one more caveat that I haven't addressed yet.
+Since I am not actually storing the frequency table in the file, I only calculate the size because I'm lazy.
+But there is a major oversight, and that is that I've only allocated 8 bits per character, a maximum of 255.
+This means that if a character appears more than 255 times in a file, the frequency table won't be able to store it.
+This could become a big issue. Because if the huffman tree is not reconstructed perfectly, then the data will become corrupted.
+And it's possible that it will not be reconstructed perfectly if the values are capped at 255, or if they are squished to fit in a range.
+Because some values may become equal when they were otherwise distinct, and then their placements can change.
+I don't know how to fix this, potentially the only solution would be to allocated more than 8 bits for each character, but this doesn't seem
+like a good solution.
+
+Ah the internet has provided me with an alternative. Instead of storing the literal frequences to rebuild the tree, just store the tree itself.
+This is a little tricky to do, because you need to store the leafs but also some clever way of storing the structure of the connections between them in a way that the program can rebuild the tree from it
+
+Another possibility is to store the lengths of the huffman codes and then the codes themselves. More straightforward but potentially less efficient, to be honest I don't know which one of these is more efficient.
+But the idea is just like those pen text engines you store the character, then the length of the code (4 bits is plenty for ASCII - actually not, see below), then the code.
+The length of the code should never exceed 15 bits, although there is nothing explicitly stopping it from going up to 255 bits even for ASCII. It would require tricky engineering once again.
+Alternatively, just use 8 bits for the length of the code, this is unideal but technically it is the simplest solution for infinitely scalable huffman encoding.
+It seems like the zlib developers have also come across this problem, which is amusing. Obviously they have come up with a much more clever solution.
+
+Now, here's a bunch of characters to make the frequency table really big
+
+1234567890!'^+%&/()=[]{}@~|\<>$?_
+
+Isn't that special.
+
+But with a file of this size, the frequency table starts to become negligable.
+Even with all of that the huffman encoding (using just 16 bits per character for the frequency, which may not be possible)
+is still 60% or so the size of the original binary.
+
+With the worst case estimations, it's an extra 1000 bits for the frequency table by using the 8 bit code length + the code itself
+which would still not even put it over 2/3 the size of the original binary. So it seems pretty good.
+
+What if we could use a floating point-esque system to record frequency. I mean we kind of already are.
+I mean there really is not much point to having an 8 bit length and then a code afterwards, well there is maybe a tiny bit of advantage of
+that over just like a 12 bit integer. I think it's not too important but I really should actually just implement it instead of theorising about
+how much space it would theoretically take, but I'm so scared that I won't be able to decode because I'm dumb.
+
+Idk. Maybe a project for another day, I mean I can say I implented huffman encoding right, cuz I did it literally encodes it and that's it.
+So add that to the resume
