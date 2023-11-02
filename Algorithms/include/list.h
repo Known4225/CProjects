@@ -307,7 +307,7 @@ int unitype_check_equal (unitype item1, unitype item2, char typeItem1, char type
 int list_find(list_t *list, unitype item, char type) { // returns the index of the first instance of the item in the list, returns -1 if not found (python)
     int trig = 0;
     for (int i = 0; i < list -> length; i++) {
-        trig += unitype_check_equal(list -> data[i], item, list -> type[i], type);
+        trig += type == list -> type[i] && unitype_check_equal(list -> data[i], item, list -> type[i], type);
         if (trig == 1) {
             return i;
         }
@@ -359,6 +359,42 @@ int list_remove(list_t *list, unitype item, char type) { // deletes the first in
         trig += unitype_check_equal(list -> data[i], item, list -> type[i], type);
         if (trig == 1) {
             list_delete(list, i);
+            return i;
+        }
+    }
+    return -1;
+}
+
+int list_remove_no_free(list_t *list, unitype item, char type) { // deletes the first instance of the item from the list, returns the index the item was at, returns -1 and doesn't modify the list if not found (python but without ValueError)
+    int trig = 0;
+    for (int i = 0; i < list -> length; i++) {
+        trig += unitype_check_equal(list -> data[i], item, list -> type[i], type);
+        if (trig == 1) {
+            list_delete_no_free(list, i);
+            return i;
+        }
+    }
+    return -1;
+}
+
+int list_remove_type_check(list_t *list, unitype item, char type) { // deletes the first instance of the item from the list, returns the index the item was at, returns -1 and doesn't modify the list if not found (python but without ValueError)
+    int trig = 0;
+    for (int i = 0; i < list -> length; i++) {
+        trig += type == list -> type[i] && unitype_check_equal(list -> data[i], item, list -> type[i], type);
+        if (trig == 1) {
+            list_delete(list, i);
+            return i;
+        }
+    }
+    return -1;
+}
+
+int list_remove_type_check_no_free(list_t *list, unitype item, char type) { // deletes the first instance of the item from the list, returns the index the item was at, returns -1 and doesn't modify the list if not found (python but without ValueError)
+    int trig = 0;
+    for (int i = 0; i < list -> length; i++) {
+        trig += type == list -> type[i] && unitype_check_equal(list -> data[i], item, list -> type[i], type);
+        if (trig == 1) {
+            list_delete_no_free(list, i);
             return i;
         }
     }
