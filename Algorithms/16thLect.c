@@ -122,9 +122,10 @@ int main(int argc, char *argv[]) {
     FILE *fp = fopen(filename, "r");
     char read;
     while (fscanf(fp, "%c", &read) != EOF) {
-        if (list_count(frequencyTable, (unitype) read, 'c') > 0) {
-            frequencyTable -> data[list_index(frequencyTable, (unitype) read, 'c') + 1].i += 1;
+        if (list_count_type_check(frequencyTable, (unitype) read, 'c') > 0) {
+            frequencyTable -> data[list_index_type_check(frequencyTable, (unitype) read, 'c') + 1].i += 1;
         } else {
+            // printf("%c\n", read);
             list_append(frequencyTable, (unitype) read, 'c');
             list_append(frequencyTable, (unitype) 1, 'i');
         }
@@ -185,7 +186,7 @@ int main(int argc, char *argv[]) {
             }
             mask >>= 1;
         }
-        list_t *coded = encodeTable -> data[list_index(encodeTable, (unitype) read, 'c') + 1].r;
+        list_t *coded = encodeTable -> data[list_index_type_check(encodeTable, (unitype) read, 'c') + 1].r;
         list_append(huffmanBinary, (unitype) list_init(), 'r');
         huffmanLength += coded -> length;
         for (int i = 0; i < coded -> length; i++) {

@@ -2,3 +2,8 @@ this is a test of huffman encoding. It uses ASCII encoding of symbols. Mayhaps i
 One of the best ways to think about huffman encoding is that it's like morse code but tailored to a specific file. Morse code was meant to be tailored to the most common letters, making them the shortest and easiest to send.
 But because morse did not have very good data back in the day, he was quite a bit wrong about what letters are the most common in english.
 With huffman encoding, we can make morse's dream finally come true.
+
+So yeah it seems like that bigger file did help the huffing paint algorithm quite a bit.
+It's unfortunate that you have to store the frequency table, because that thing takes up a lot of space.
+It makes huffman encoding not super feasible small files, but this idea of storing a table is fairly common in file formats.
+Many image file formats have a color table, which allows them to use less colors and save a lot of space.

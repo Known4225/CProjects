@@ -326,10 +326,29 @@ int list_index(list_t *list, unitype item, char type) { // duplicate of list_fin
     return -1;
 }
 
+int list_index_type_check(list_t *list, unitype item, char type) { // now makes sure is correct type
+    int trig = 0;
+    for (int i = 0; i < list -> length; i++) {
+        trig += type == list -> type[i] && unitype_check_equal(list -> data[i], item, list -> type[i], type);
+        if (trig == 1) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 int list_count(list_t *list, unitype item, char type) { // counts how many instances of an item is found in the list
     int count = 0;
     for (int i = 0; i < list -> length; i++) {
         count += unitype_check_equal(list -> data[i], item, list -> type[i], type);
+    }
+    return count;
+}
+
+int list_count_type_check(list_t *list, unitype item, char type) { // now makes sure is correct type
+    int count = 0;
+    for (int i = 0; i < list -> length; i++) {
+        count += type == list -> type[i] && unitype_check_equal(list -> data[i], item, list -> type[i], type);
     }
     return count;
 }
