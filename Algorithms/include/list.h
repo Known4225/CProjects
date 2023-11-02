@@ -209,6 +209,25 @@ unitype list_delete(list_t *list, int index) { // deletes the item at list[index
     return ret;
 }
 
+unitype list_delete_no_free(list_t *list, int index) {
+    while (index < 0) {index += list -> length;}
+    index %= list -> length;
+    unitype ret = list -> data[index];
+    for (int i = index; i < list -> length - 1 ; i++) {
+        list -> data[i] = list -> data[i + 1];
+        list -> type[i] = list -> type[i + 1];
+    }
+    list -> length -= 1;
+    list -> type[list -> length] = (char) 0;
+    list -> data[list -> length] = (unitype) 0;
+    if (list -> length <= list -> realLength / 2 && list -> realLength > 1) {
+        list -> realLength /= 2;
+        list -> type = realloc(list -> type, list -> realLength);
+        list -> data = realloc(list -> data, list -> realLength * sizeof(unitype));
+    }
+    return ret;
+}
+
 void list_delete_range(list_t* list, int indexMin, int indexMax) { // deletes many items from the list spanning from [indexMin] to [indexMax - 1]
     if (indexMin > indexMax) {
         int swap = indexMin;

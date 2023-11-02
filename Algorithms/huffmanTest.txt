@@ -1,0 +1,1 @@
+this is a test of huffman encoding. It uses ASCII encoding of symbols.
