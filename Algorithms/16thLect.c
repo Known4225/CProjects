@@ -100,7 +100,6 @@ huff *huffmanBuildTree(list_t *nodes) {
         // step 2: create parent node
         huff *newNode = malloc(sizeof(huff));
         newNode -> symbols = list_init();
-        list_print(smallest -> symbols);
         list_copy(smallest -> symbols, newNode -> symbols);
         for (int i = 0; i < secondSmallest -> symbols -> length; i++) {
             list_append(newNode -> symbols, secondSmallest -> symbols -> data[i], 'c');
@@ -135,6 +134,7 @@ int main(int argc, char *argv[]) {
 
     list_t *nodes = huffmanCreateNodes(frequencyTable);
     huff *head = huffmanBuildTree(nodes);
+    printf("------------------\n");
 
     // head is now the head of the huffman tree
     // now we need to encode each of the characters in the file
@@ -219,6 +219,11 @@ int main(int argc, char *argv[]) {
             hNext++;
         }
     }
+    origCond[oNext] = '\0';
+    huffCond[hNext] = '\0';
     printf("\nOriginal Binary (%d bits): %s\n", originalBinary -> length * 8, origCond);
     printf("\nHuffman Binary (%d bits): %s\n", huffmanLength, huffCond);
+
+    printf("the frequency table is %d bits\n", frequencyTable -> length / 2 * 8 * 2);
+    printf("this means the full huffman scheme takes %d bits compared to %d bits of the original data\n", frequencyTable -> length * 8 + huffmanLength, originalBinary -> length * 8);
 }

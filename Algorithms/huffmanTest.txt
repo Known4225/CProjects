@@ -1,1 +1,4 @@
-this is a test of huffman encoding. It uses ASCII encoding of symbols.
+this is a test of huffman encoding. It uses ASCII encoding of symbols. Mayhaps if the file is bigger the huffman scheme will work better. Only tests will tell. Let me try something. BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB.
+One of the best ways to think about huffman encoding is that it's like morse code but tailored to a specific file. Morse code was meant to be tailored to the most common letters, making them the shortest and easiest to send.
+But because morse did not have very good data back in the day, he was quite a bit wrong about what letters are the most common in english.
+With huffman encoding, we can make morse's dream finally come true.
