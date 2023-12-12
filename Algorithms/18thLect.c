@@ -127,11 +127,11 @@ int matrix_parenthesises_output(int *P, int i, int j, int **saved, int **out) {
     return min;
 }
 
-int **init() {
-    int **S = malloc(sizeof(int) * 4);
-    for (int i = 0; i < 4; i++) {
-        S[i] = malloc(sizeof(int) * 4);
-        for (int j = 0; j < 4; j++) {
+int **init(int size) {
+    int **S = malloc(sizeof(int *) * size);
+    for (int i = 0; i < size; i++) {
+        S[i] = malloc(sizeof(int) * size);
+        for (int j = 0; j < size; j++) {
             S[i][j] = -1;
         }
     }
@@ -157,15 +157,17 @@ void matrix_print_parenthesises(int **O, int i, int j) {
 }
 
 int main(int argc, char *argv[]) {
-    int P[5] = {40, 20, 30, 10, 30};
-    printf("result: %d in %d calls\n", matrix_parenthesises(P, 1, 4), callsOrig);
-    int **S = init();
-    
-    printf("result_dynamic: %d in %d calls\n", matrix_parenthesises_dynamic(P, 1, 4, S), callsDyn);
+    // int P[5] = {40, 20, 30, 10, 30};
+    int P[6] = {9, 76, 64, 21, 97, 60};
+    int res = matrix_parenthesises(P, 1, 5);
+    printf("result: %d in %d calls\n", res, callsOrig);
+    int **S = init(5);
+    res = matrix_parenthesises_dynamic(P, 1, 5, S);
+    printf("result_dynamic: %d in %d calls\n", res, callsDyn);
     
     // freeList(S);
-    S = init();
-    int **O = init();
+    S = init(4);
+    int **O = init(4);
     matrix_parenthesises_output(P, 1, 4, S, O);
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {

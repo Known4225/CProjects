@@ -126,6 +126,61 @@ void pattern(int num, int sup) {
     }
 }
 
+typedef struct {
+    int **map;
+    int *mapCapacities;
+    int *mapLengths;
+    int length;
+} int_hashmap_t;
+
+int_hashmap_t *int_hashmap_init(int len) {
+    int_hashmap_t *out = malloc(sizeof(int_hashmap_t));
+    out -> length = len;
+    out -> map = malloc(sizeof(int *) * len);
+    out -> mapCapacities = malloc(sizeof(int) * len);
+    out -> mapLengths = malloc(sizeof(int) * len);
+    for (int i = 0; i < len; i++) {
+        out -> mapLengths[i] = 0;
+        out -> mapCapacities[i] = 1;
+        out -> map[i] = malloc(sizeof(int));
+        out -> map[i][0] = -1649223620;
+    }
+    return out;
+}
+
+void int_hashmap_free(int_hashmap_t *selfp) {
+    for (int i = 0; i < selfp -> length; i++) {
+        free(selfp -> map[i]);
+    }
+    free(selfp -> map);
+    free(selfp -> mapLengths);
+    free(selfp -> mapCapacities);
+    free(selfp);
+}
+
+void int_hashmap_add(int_hashmap_t *selfp, int toAdd) {
+    /* hash function: f(x) = x % length */
+    int mapped = toAdd % selfp -> length;
+    // printf("map[%d][%d] = %d\n", mapped, selfp -> mapLengths[mapped], selfp -> map[mapped][selfp -> mapLengths[mapped]]);
+    if (selfp -> mapLengths[mapped] == selfp -> mapCapacities[mapped]) {
+        selfp -> mapCapacities[mapped] *= 2;
+        selfp -> map[mapped] = realloc(selfp -> map[mapped], sizeof(int) * selfp -> mapCapacities[mapped]);
+    }
+    selfp -> map[mapped][selfp -> mapLengths[mapped]] = toAdd;
+    selfp -> mapLengths[mapped]++;
+}
+
+char int_hashmap_check(int_hashmap_t *selfp, int toCheck) {
+    int mapped = toCheck % selfp -> length;
+    for (int i = 0; i < selfp -> mapLengths[mapped]; i++) {
+        if (selfp -> map[mapped][i] == toCheck) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
@@ -575,6 +630,66 @@ void itoa(int num, char* str) { // life is pain
     str[index] = '\0';
 }
 
+int maxCoins(int* nums, int numsSize) {
+    /* strategy 1: burst in order from least to greatest */
+    int out = 0;
+    prior_que_t *que = que_init();
+    for (int i = 0; i < numsSize; i++) {
+        que_add(que, i, nums[i] * -1);
+    }
+    while (que -> length > 0) {
+        int popped = que_pop(que);
+        int left;
+        int right;
+        int leftp = popped - 1;
+        int rightp = popped + 1;
+        char leftHit = 0;
+        char rightHit = 0;
+        while (leftp > -1 && nums[leftp] == 0) {
+            leftp--;
+        }
+        if (leftp == -1) {
+            leftHit = 1;
+            left = 1;
+        } else {
+            left = nums[leftp];
+        }
+        while (rightp < numsSize && nums[rightp] == 0) {
+            rightp++;
+        }
+        if (rightp == numsSize) {
+            rightHit = 1;
+            right = 1;
+        } else {
+            right = nums[rightp];
+        }
+        // printf("%d %d %d\n", leftHit, rightHit, que -> length);
+        if ((leftHit || rightHit) && (que -> length > 1)) {
+            printf("omitted %d\n", nums[popped]);
+            que_add(que, popped, -301);
+        } else {
+            if (que -> length == 1) {
+                int test = que_pop(que);
+                out += nums[test] * nums[popped];
+                if (nums[test] < nums[popped]) {
+                    printf("deleted %d %d\n", nums[test], out);
+                    out += nums[popped];
+                    printf("deleted %d %d\n", nums[popped], out);
+                } else {
+                    printf("deleted %d %d\n", nums[popped], out);
+                    out += nums[test];
+                    printf("deleted %d %d\n", nums[test], out);
+                }
+            } else {
+                out += nums[popped] * left * right;
+                printf("deleted %d %d\n", nums[popped], out);
+                nums[popped] = 0;
+            }
+        }
+    }
+    return out;
+}
+
 int main(int argc, char *argv[]) {
     // int nums[6] = {1, 1, 1, 2, 2, 3};
     // int size;
@@ -592,7 +707,24 @@ int main(int argc, char *argv[]) {
     // char *test2 = "52"; // does not make a copy
     // printf("%s\n", largestOddNumber(test));
 
-    int nums[] = {-1,4,2,1,9,10};
-    printf("first: %d\n", firstMissingPositive(nums, 6));
-    printArray(nums, 6);
+    // int nums[] = {-1,4,2,1,9,10};
+    // printf("first: %d\n", firstMissingPositive(nums, 6));
+    // printArray(nums, 6);
+
+    int_hashmap_t *newMap = int_hashmap_init(20);
+    for (int i = 0; i < 100; i++) {
+        int_hashmap_add(newMap, i);
+    }
+    int_hashmap_add(newMap, 169);
+    for (int i = 0; i < 101; i++) {
+        if (!int_hashmap_check(newMap, i)) {
+            printf("could not find %d\n", i);
+        }
+    }
+    for (int i = 100; i < 200; i++) {
+        if (int_hashmap_check(newMap, i)) {
+            printf("found %d when it didn't exist\n", i);
+        }
+    }
+    int_hashmap_free(newMap);
 }
