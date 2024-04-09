@@ -166,11 +166,11 @@ int main(int argc, char *argv[]) {
     printf("result_dynamic: %d in %d calls\n", res, callsDyn);
     
     // freeList(S);
-    S = init(4);
-    int **O = init(4);
-    matrix_parenthesises_output(P, 1, 4, S, O);
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+    S = init(6);
+    int **O = init(6);
+    matrix_parenthesises_output(P, 1, 6, S, O);
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
             if (O[i][j] == -1) {
                 printf("0");
             } else {
@@ -179,6 +179,6 @@ int main(int argc, char *argv[]) {
         }
         printf("\n");
     }
-    matrix_print_parenthesises(O, 1, 4);
+    matrix_print_parenthesises(O, 1, 6);
     printf("\n");
 }

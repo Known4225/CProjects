@@ -101,6 +101,11 @@ int main(int argc, char *argv[]) {
     // noCopy[0] = 'g'; // illegal (segfault, bad permissions, cannot mutate)
     copy[0] = 'g'; // legal
     printf("%s\n%s\n", noCopy, copy);
+
+    /* attempt to free the middle of an allocation */
+    int *freeTest = malloc(sizeof(int) * 10); // malloc 10 ints
+    // free(freeTest + 5); // free 5 of the ints (aborted, invalid free())
+    free(freeTest); // free
 }
 
 /* extra: if function-hover/ctrl-click doesn't work:
